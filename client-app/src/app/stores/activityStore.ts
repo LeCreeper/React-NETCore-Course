@@ -25,7 +25,7 @@ export default class ActivityStore {
          const activities = await agent.activities.list();
          activities.forEach((activity) => {
             activity.date = activity.date.split('T')[0];
-            this.activityRegistry.set(activity.id, activity);
+            this.setActivityRegistry(activity.id, activity);
          });
          this.setLoadingInitial(false);
       } catch (error) {
@@ -36,6 +36,10 @@ export default class ActivityStore {
 
    setLoadingInitial = (state: boolean) => {
       this.loadingInitial = state;
+   };
+
+   setActivityRegistry = (id: string, activity: Activity) => {
+      this.activityRegistry.set(id, activity);
    };
 
    selectActivity = (id: string) => {
@@ -61,7 +65,7 @@ export default class ActivityStore {
       try {
          await agent.activities.create(activity);
          runInAction(() => {
-            this.activityRegistry.set(activity.id, activity);
+            this.setActivityRegistry(activity.id, activity);
             this.selectedActivity = activity;
             this.editMode = false;
             this.loading = false;
@@ -79,7 +83,7 @@ export default class ActivityStore {
       try {
          await agent.activities.update(activity);
          runInAction(() => {
-            this.activityRegistry.set(activity.id, activity);
+            this.setActivityRegistry(activity.id, activity);
             this.selectedActivity = activity;
             this.editMode = false;
             this.loading = false;
